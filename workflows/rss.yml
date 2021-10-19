@@ -28,7 +28,7 @@ jobs:
           echo content: $content
           echo guid: $guid
           echo pubDate: $pubDate
-      - name: rewrite url
+      - name: rewrite content
         id: set-content
         uses: actions/github-script@v4
         env:
@@ -59,6 +59,6 @@ jobs:
             {
               "msgtype": "markdown",
               "markdown": {
-                "content": "${{on.rss.outputs.title}} \n ${{steps.set-content.outputs.result}} \n 查看全部文章：[${{on.rss.outputs.title}}](${{on.rss.outputs.link}})"
+                "content": "${{on.rss.outputs.title}} \n ${{steps.set-content.outputs.result}} \n\n 查看全部文章：[${{on.rss.outputs.title}}](${{on.rss.outputs.link}})"
               }
             }
