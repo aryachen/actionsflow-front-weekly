@@ -1,6 +1,6 @@
 on:
   rss:
-    url: https://WEEEKLY.75.TEAM/RSS
+    url: https://weekly.75.team/rss
     config:
       limit: 1
       timeZone: Asia/Shanghai
