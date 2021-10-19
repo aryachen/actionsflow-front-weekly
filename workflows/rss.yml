@@ -38,11 +38,19 @@ jobs:
           script: |
             let { content } = process.env
             console.log("content is", content)
-            let newContent = content.split('</h3>').map(i => {
-                const patt = /(.*)href="(.*)">(.*)<\/a>/
-                const [,,href, title] = i.match(patt) || []
-                return href && title ? `[${title}](${href})` : null
+            let newContent = content.split('</h3>').map((i, index, arr) => {
+                const patt = /(.*)href="([^"]+)"(.*)>(.*)<\/a>/
+                const [,,href, ,title] = i.match(patt) || []
+                console.log('index', index, arr.length)
+                if (!href || !title) {
+                    return null
+                } else if (index === (arr.length - 1) && i.indexOf('查看全部文章') !== -1) {
+                    return `\n[查看全部文章](${href})`
+                } else {
+                    return `${index+1}、[${title}](${href})`
+                }
             }).filter(i => i).join('\n')
+            console.log("newContent is", newContent)
             return newContent
       - name: Post To WeCom
         uses: actionsflow/axios@v1
