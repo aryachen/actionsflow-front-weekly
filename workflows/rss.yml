@@ -23,8 +23,8 @@ jobs:
           method: POST
           body: |
             {
-              "msgtype": "text",
-              "text": {
-                "content": "${{on.rss.outputs.title}} ${{steps.set-link.outputs.result}}"
+              "msgtype": "markdown",
+              "markdown": {
+                "content": "${{on.rss.outputs.title}} \n ${{on.rss.outputs.description}}"
               }
             }
