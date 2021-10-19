@@ -28,15 +28,15 @@ jobs:
           echo content: $content
           echo guid: $guid
           echo pubDate: $pubDate
-      # - name: Post To WeCom
-      #   uses: actionsflow/axios@v1
-      #   with:
-      #     url: ${{ secrets.WECOM_URL }}
-      #     method: POST
-      #     body: |
-      #       {
-      #         "msgtype": "markdown",
-      #         "markdown": {
-      #           "content": "${{on.rss.outputs.title}} \n ${{on.rss.outputs.description}} \n 来源：${{on.rss.outputs.link}}"
-      #         }
-      #       }
+      - name: Post To WeCom
+        uses: actionsflow/axios@v1
+        with:
+          url: ${{ secrets.WECOM_URL }}
+          method: POST
+          body: |
+            {
+              "msgtype": "markdown",
+              "markdown": {
+                "content": "${{on.rss.outputs.title}} \n ${{on.rss.outputs.content}} \n 来源：${{on.rss.outputs.link}}"
+              }
+            }
