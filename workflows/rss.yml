@@ -28,6 +28,22 @@ jobs:
           echo content: $content
           echo guid: $guid
           echo pubDate: $pubDate
+      - name: rewrite url
+        id: set-content
+        uses: actions/github-script@v4
+        env:
+          content: ${{ on.rss.outputs.content }}
+        with:
+          result-encoding: string # 关键点 下面的 result 直接引用就是 string 类型
+          script: |
+            let { content } = process.env
+            console.log("content is", content)
+            let newContent = content.split('</h3>').map(i => {
+                const patt = /(.*)href="(.*)">(.*)<\/a>/
+                const [,,href, title] = i.match(patt) || []
+                return href && title ? `[${title}](${href})` : null
+            }).filter(i => i).join('\n')
+            return newContent
       - name: Post To WeCom
         uses: actionsflow/axios@v1
         with:
@@ -37,6 +53,6 @@ jobs:
             {
               "msgtype": "markdown",
               "markdown": {
-                "content": "${{on.rss.outputs.title}} \n ${{on.rss.outputs.content}} \n 来源：${{on.rss.outputs.link}}"
+                "content": "${{on.rss.outputs.title}} \n ${{steps.set-content.outputs.result}} \n 来源：${{on.rss.outputs.link}}"
               }
             }
