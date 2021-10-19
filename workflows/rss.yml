@@ -1,17 +1,30 @@
 on:
   rss:
-    url: https://hnrss.org/newest?points=300&count=3
+    url: https://WEEEKLY.75.TEAM/RSS
+    config:
+      limit: 1
+      timeZone: Asia/Shanghai
 jobs:
-  print:
-    name: Print
+  operation:
+    name: Rss Operation
     runs-on: ubuntu-latest
     steps:
       - name: Print Outputs
         env:
           title: ${{on.rss.outputs.title}}
-          contentSnippet: ${{on.rss.outputs.contentSnippet}}
           link: ${{on.rss.outputs.link}}
         run: |
           echo title: $title
-          echo contentSnippet: $contentSnippet
           echo link: $link
+      - name: Post To WeCom
+        uses: actionsflow/axios@v1
+        with:
+          url: ${{ secrets.WECOM_URL }}
+          method: POST
+          body: |
+            {
+              "msgtype": "text",
+              "text": {
+                "content": "${{on.rss.outputs.title}} ${{steps.set-link.outputs.result}}"
+              }
+            }
