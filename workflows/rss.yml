@@ -42,12 +42,10 @@ jobs:
                 const patt = /(.*)href="([^"]+)"(.*)>(.*)<\/a>/
                 const [,,href, ,title] = i.match(patt) || []
                 console.log('index', index, arr.length)
-                if (!href || !title) {
+                if (!href || !title || (index === (arr.length - 1) && i.indexOf('查看全部文章') !== -1)) {
                     return null
-                } else if (index === (arr.length - 1) && i.indexOf('查看全部文章') !== -1) {
-                    return `\n[查看全部文章](${href})`
                 } else {
-                    return `${index+1}、[${title}](${href})`
+                    return `>${index+1}、[${title}](${href})`
                 }
             }).filter(i => i).join('\n')
             console.log("newContent is", newContent)
@@ -61,6 +59,6 @@ jobs:
             {
               "msgtype": "markdown",
               "markdown": {
-                "content": "${{on.rss.outputs.title}} \n ${{steps.set-content.outputs.result}} \n 来源：${{on.rss.outputs.link}}"
+                "content": "${{on.rss.outputs.title}} \n ${{steps.set-content.outputs.result}} \n 查看全部文章：[${{on.rss.outputs.title}}](${{on.rss.outputs.link}})"
               }
             }
